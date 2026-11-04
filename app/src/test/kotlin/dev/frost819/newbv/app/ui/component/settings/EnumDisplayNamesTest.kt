@@ -4,8 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import dev.frost819.newbv.data.datastore.ActionAfterPlay
 import dev.frost819.newbv.data.datastore.ApiType
 import dev.frost819.newbv.data.datastore.Audio
-import dev.frost819.newbv.data.datastore.HomeTopNavItem
-import dev.frost819.newbv.data.datastore.PersonalTopNavItem
 import dev.frost819.newbv.data.datastore.PlaySpeed
 import dev.frost819.newbv.data.datastore.Resolution
 import dev.frost819.newbv.data.datastore.ThemeMode
@@ -113,34 +111,5 @@ class EnumDisplayNamesTest {
         assertThat(ThemeMode.FollowSystem.displayName).isEqualTo("跟随系统")
         assertThat(ThemeMode.Dark.displayName).isEqualTo("深色")
         assertThat(ThemeMode.Light.displayName).isEqualTo("浅色")
-    }
-
-    @Test
-    fun homeTopNavItem_displayNames_allNonEmpty() {
-        HomeTopNavItem.entries.forEach { item ->
-            assertThat(item.displayName).isNotEmpty()
-        }
-    }
-
-    @Test
-    fun homeTopNavItem_displayNames_knownValues() {
-        assertThat(HomeTopNavItem.Dynamics.displayName).isEqualTo("动态")
-        assertThat(HomeTopNavItem.Recommend.displayName).isEqualTo("推荐")
-        assertThat(HomeTopNavItem.Popular.displayName).isEqualTo("热门")
-    }
-
-    @Test
-    fun personalTopNavItem_displayNames_allNonEmpty() {
-        PersonalTopNavItem.entries.forEach { item ->
-            assertThat(item.displayName).isNotEmpty()
-        }
-    }
-
-    @Test
-    fun personalTopNavItem_displayNames_knownValues() {
-        assertThat(PersonalTopNavItem.ToView.displayName).isEqualTo("稍后再看")
-        assertThat(PersonalTopNavItem.History.displayName).isEqualTo("历史")
-        assertThat(PersonalTopNavItem.Favorite.displayName).isEqualTo("收藏")
-        assertThat(PersonalTopNavItem.FollowingSeason.displayName).isEqualTo("追番")
     }
 }

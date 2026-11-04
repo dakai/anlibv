@@ -138,8 +138,8 @@ class PrefsTest {
     }
 
     @Test
-    fun `default showVideoInfo is true`() {
-        assertThat(Prefs.showVideoInfo).isTrue()
+    fun `default firstPersonalTopNavItem is ToView`() {
+        assertThat(Prefs.firstPersonalTopNavItem).isEqualTo(PersonalTopNavItem.ToView)
     }
 
     @Test
@@ -150,21 +150,6 @@ class PrefsTest {
     @Test
     fun `default density is 2f`() {
         assertThat(Prefs.density).isEqualTo(2f)
-    }
-
-    @Test
-    fun `default homeLeftNavItem is Home`() {
-        assertThat(Prefs.homeLeftNavItem).isEqualTo(LeftNaviItem.Home)
-    }
-
-    @Test
-    fun `default firstHomeTopNavItem is Dynamics`() {
-        assertThat(Prefs.firstHomeTopNavItem).isEqualTo(HomeTopNavItem.Dynamics)
-    }
-
-    @Test
-    fun `default firstPersonalTopNavItem is ToView`() {
-        assertThat(Prefs.firstPersonalTopNavItem).isEqualTo(PersonalTopNavItem.ToView)
     }
 
     @Test
@@ -208,13 +193,8 @@ class PrefsTest {
     }
 
     @Test
-    fun `default danmakuTypes contains All Rolling Top Bottom`() {
-        assertThat(Prefs.defaultDanmakuTypes).containsExactly(
-            DanmakuType.All,
-            DanmakuType.Rolling,
-            DanmakuType.Top,
-            DanmakuType.Bottom,
-        )
+    fun `default danmakuTypes is empty so danmaku starts disabled`() {
+        assertThat(Prefs.defaultDanmakuTypes).isEmpty()
     }
 
     // ===== 读写测试 =====
@@ -251,7 +231,6 @@ class PrefsTest {
             Prefs.actionAfterPlay = ActionAfterPlay.Exit
             Prefs.defaultPlaySpeed = PlaySpeed.X2
             Prefs.themeMode = ThemeMode.Dark
-            Prefs.homeLeftNavItem = LeftNaviItem.Search
 
             awaitAsyncWrite()
 
@@ -262,7 +241,6 @@ class PrefsTest {
             assertThat(Prefs.actionAfterPlay).isEqualTo(ActionAfterPlay.Exit)
             assertThat(Prefs.defaultPlaySpeed).isEqualTo(PlaySpeed.X2)
             assertThat(Prefs.themeMode).isEqualTo(ThemeMode.Dark)
-            assertThat(Prefs.homeLeftNavItem).isEqualTo(LeftNaviItem.Search)
         }
 
     @Test
@@ -285,6 +263,20 @@ class PrefsTest {
             awaitAsyncWrite()
 
             assertThat(Prefs.defaultDanmakuTypes).containsExactly(DanmakuType.Top, DanmakuType.Bottom)
+        }
+
+    @Test
+    fun `writing empty danmaku types keeps danmaku disabled after reload`() =
+        runBlocking {
+            Prefs.defaultDanmakuTypes = emptyList()
+            awaitAsyncWrite()
+
+            // 空列表持久化为空字符串，重启后必须仍是空列表（= 弹幕关闭），
+            // 不能回退到"显示全部类型"的旧默认值
+            Prefs.resetForTesting()
+            Prefs.init(dataStore)
+
+            assertThat(Prefs.defaultDanmakuTypes).isEmpty()
         }
 
     @Test
@@ -408,16 +400,6 @@ class PrefsTest {
     }
 
     @Test
-    fun `LeftNaviItem fromOrdinal returns default for invalid`() {
-        assertThat(LeftNaviItem.fromOrdinal(99999)).isEqualTo(LeftNaviItem.Home)
-    }
-
-    @Test
-    fun `PersonalTopNavItem fromOrdinal returns default for invalid`() {
-        assertThat(PersonalTopNavItem.fromOrdinal(99999)).isEqualTo(PersonalTopNavItem.ToView)
-    }
-
-    @Test
     fun `ThemeMode fromOrdinal returns default for invalid`() {
         assertThat(ThemeMode.fromOrdinal(99999)).isEqualTo(ThemeMode.FollowSystem)
     }
@@ -448,11 +430,6 @@ class PrefsTest {
     @Test
     fun `PlaySpeed fromSpeed returns X1 for invalid`() {
         assertThat(PlaySpeed.fromSpeed(999f)).isEqualTo(PlaySpeed.X1)
-    }
-
-    @Test
-    fun `HomeTopNavItem fromCode handles invalid`() {
-        assertThat(HomeTopNavItem.fromCode(999)).isEqualTo(HomeTopNavItem.Dynamics)
     }
 
     /**

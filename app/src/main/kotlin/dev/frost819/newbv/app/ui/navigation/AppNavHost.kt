@@ -5,27 +5,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import dev.frost819.newbv.app.ui.screen.detail.videoDetailScreen
-import dev.frost819.newbv.app.ui.screen.home.homeScreen
-import dev.frost819.newbv.app.ui.screen.live.liveAreaScreen
-import dev.frost819.newbv.app.ui.screen.live.liveFollowScreen
 import dev.frost819.newbv.app.ui.screen.login.loginScreen
-import dev.frost819.newbv.app.ui.screen.pgc.pgcFeatureScreen
-import dev.frost819.newbv.app.ui.screen.player.livePlayerScreen
-import dev.frost819.newbv.app.ui.screen.player.seasonPlayerScreen
+import dev.frost819.newbv.app.ui.screen.main.mainScreen
 import dev.frost819.newbv.app.ui.screen.player.videoPlayerScreen
-import dev.frost819.newbv.app.ui.screen.search.searchResultScreen
 import dev.frost819.newbv.app.ui.screen.settings.settingsScreen
-import dev.frost819.newbv.app.ui.screen.user.followScreen
-import dev.frost819.newbv.app.ui.screen.user.userSpaceScreen
-import dev.frost819.newbv.app.ui.screen.user.userSwitchScreen
 import dev.frost819.newbv.core.log.Loggers
 
 /**
  * 应用 Navigation 宿主。
  *
- * 单 Activity 架构：所有页面通过 Navigation-Compose 导航，无新 Activity 启动。
- * 路由定义见 [Routes]。
+ * 只保留三个入口：anlibili 视频列表（[HomeRoute]）、视频播放器（[VideoPlayerRoute]）
+ * 与设置（[SettingsRoute]，含编解码/日志子页）、登录（[LoginRoute]）。
  *
  * @param navController 导航控制器，默认使用 [rememberNavController]
  * @param startDestination 起始路由，默认 [HomeRoute]
@@ -52,34 +42,9 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination,
     ) {
-        // ── 主流程 ────────────────────────────────────────────────────
-        homeScreen(navController)
-        searchResultScreen(navController)
-
-        // ── 视频详情 ─────────────────────────────────────────────────
-        videoDetailScreen(navController)
-
-        // ── 直播 ─────────────────────────────────────────────────────
-        liveAreaScreen(navController)
-        liveFollowScreen(navController)
-
-        // ── 播放器 ───────────────────────────────────────────────────
+        mainScreen(navController)
         videoPlayerScreen(navController)
-        seasonPlayerScreen(navController)
-        livePlayerScreen(navController)
-
-        // ── 用户 ─────────────────────────────────────────────────────
-        userSpaceScreen(navController)
-        followScreen(navController)
-
-        // ── PGC ──────────────────────────────────────────────────────
-        pgcFeatureScreen(navController)
-
-        // ── 设置 ─────────────────────────────────────────────────────
         settingsScreen(navController)
-        userSwitchScreen(navController)
-
-        // ── 登录 ─────────────────────────────────────────────────────
         loginScreen(navController)
     }
 }

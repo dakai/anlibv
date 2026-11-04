@@ -26,8 +26,6 @@ class PlayerCustomShortcutCatalogTest {
             "open_related_videos",
             "play_previous",
             "play_next",
-            "open_video_detail",
-            "open_up_page",
             "open_comments",
             "open_interaction",
             "toggle_loop",

@@ -16,10 +16,6 @@ sealed interface PlayerCustomShortcutAction {
 
     data object PlayNext : PlayerCustomShortcutAction
 
-    data object OpenVideoDetail : PlayerCustomShortcutAction
-
-    data object OpenUpPage : PlayerCustomShortcutAction
-
     data object OpenComments : PlayerCustomShortcutAction
 
     data object OpenInteraction : PlayerCustomShortcutAction
@@ -47,7 +43,5 @@ sealed interface PlayerCustomShortcutAction {
  */
 val pgcUnsupportedShortcutActions: Set<PlayerCustomShortcutAction> =
     setOf(
-        PlayerCustomShortcutAction.OpenVideoDetail,
-        PlayerCustomShortcutAction.OpenUpPage,
         PlayerCustomShortcutAction.OpenRelatedVideos,
     )

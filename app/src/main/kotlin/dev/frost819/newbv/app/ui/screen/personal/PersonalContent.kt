@@ -34,7 +34,7 @@ import dev.frost819.newbv.data.datastore.Prefs
 import androidx.compose.material3.Scaffold as Material3Scaffold
 
 /**
- * 个人页内容（TopNav + 4 个子 Tab）。
+ * 个人页内容（TopNav + 3 个子 Tab：稍后再看 / 历史 / 收藏）。
  *
  * 顶部 Tab 按首选项排序，Tab 切换使用 [AnimatedContent] 横向滑动。
  * 菜单键刷新当前 Tab 数据。
@@ -128,12 +128,6 @@ fun PersonalContent(
                         )
                     PersonalTopNavItem.Favorite ->
                         FavoriteScreen(
-                            viewModel = viewModel,
-                            navController = navController,
-                            focusSaver = focusSaver,
-                        )
-                    PersonalTopNavItem.FollowingSeason ->
-                        FollowingSeasonScreen(
                             viewModel = viewModel,
                             navController = navController,
                             focusSaver = focusSaver,

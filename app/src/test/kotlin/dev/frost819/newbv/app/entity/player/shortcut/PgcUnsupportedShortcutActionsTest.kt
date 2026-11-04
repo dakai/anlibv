@@ -6,15 +6,13 @@ import org.junit.jupiter.api.Test
 /**
  * [pgcUnsupportedShortcutActions] 的单元测试。
  *
- * 验证番剧播放时被禁用的路由类快捷键集合：视频详情、UP 主页、相关视频。
+ * 验证番剧播放时被禁用的路由类快捷键集合：相关视频。
  */
 class PgcUnsupportedShortcutActionsTest {
     @Test
-    fun `contains detail up and related video actions`() {
+    fun `contains related video action`() {
         assertThat(pgcUnsupportedShortcutActions)
             .containsExactly(
-                PlayerCustomShortcutAction.OpenVideoDetail,
-                PlayerCustomShortcutAction.OpenUpPage,
                 PlayerCustomShortcutAction.OpenRelatedVideos,
             )
     }

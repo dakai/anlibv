@@ -65,14 +65,11 @@ internal object PrefKeys {
 
     // ===== 播放器 - 界面 =====
     val defaultPlaySpeed = intPreferencesKey("dps")
-    val showVideoInfo = booleanPreferencesKey("show_video_info")
     val showPersistentSeek = booleanPreferencesKey("show_persistent_seek")
     val showPlayerDebugInfo = booleanPreferencesKey("show_player_debug_info")
 
     // ===== 应用界面 =====
     val density = floatPreferencesKey("density")
-    val homeLeftNavItem = intPreferencesKey("home_left_nav")
-    val firstHomeTopNavItem = intPreferencesKey("first_home_top_nav")
     val firstPersonalTopNavItem = intPreferencesKey("first_personal_top_nav")
     val showHotword = booleanPreferencesKey("shw")
     val themeMode = intPreferencesKey("theme_mode")

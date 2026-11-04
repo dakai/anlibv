@@ -9,6 +9,7 @@ import coil3.disk.DiskCache
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.crossfade
 import dagger.hilt.android.HiltAndroidApp
+import dev.frost819.newbv.app.data.anlibili.AnlibiliRepository
 import dev.frost819.newbv.app.network.HttpServer
 import dev.frost819.newbv.app.util.CacheManager
 import dev.frost819.newbv.biliapi.http.BiliHttpApi
@@ -58,6 +59,9 @@ class BVApplication : Application() {
 
     @Inject
     lateinit var channelRepository: ChannelRepository
+
+    @Inject
+    lateinit var anlibiliRepository: AnlibiliRepository
 
     /**
      * 播放器与 CDN 测速共用的 OkHttpClient。
@@ -158,6 +162,12 @@ class BVApplication : Application() {
         // 启动时检查缓存阈值，超限自动 LRU 清理（检查时机 = App 启动 + 缓存写入后）
         CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
             CacheManager(this@BVApplication).checkCache()
+        }
+
+        // 预取 anlibili 视频列表：当天已拉取过则只读本地缓存，不产生网络请求。
+        CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+            runCatching { anlibiliRepository.videos() }
+                .onFailure { logger.error(it) { "Failed to prefetch anlibili videos" } }
         }
 
         // 预热播放器 OkHttpClient（构建 SSLContext/KeyStore 较慢，放到 IO 线程）。

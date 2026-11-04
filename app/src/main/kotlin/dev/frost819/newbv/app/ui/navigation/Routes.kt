@@ -11,19 +11,9 @@ import kotlinx.serialization.Serializable
 
 // ── 主流程 ────────────────────────────────────────────────────────────
 
-/** 首页（推荐/热门/分区）。 */
+/** 主页面（anlibili 视频列表）。 */
 @Serializable
 object HomeRoute
-
-// ── 视频详情 ──────────────────────────────────────────────────────────
-
-/** 视频详情页。 */
-@Serializable
-data class VideoDetailRoute(
-    val aid: Long,
-    val bvid: String = "",
-    val epid: Long? = null,
-)
 
 // ── 播放器 ────────────────────────────────────────────────────────────
 
@@ -38,79 +28,11 @@ data class VideoPlayerRoute(
     val cover: String = "",
 )
 
-/** 番剧播放器页面。 */
-@Serializable
-data class SeasonPlayerRoute(
-    val epid: Long,
-    val sid: Long,
-    val title: String = "",
-    val cover: String = "",
-)
-
-// ── 搜索 ──────────────────────────────────────────────────────────────
-
-/** 搜索结果页。 */
-@Serializable
-data class SearchResultRoute(
-    val keyword: String,
-)
-
-// ── 直播 ──────────────────────────────────────────────────────────────
-
-/** 直播播放器页面。 */
-@Serializable
-data class LivePlayerRoute(
-    val roomId: Long,
-    val title: String = "",
-    val cover: String = "",
-)
-
-/** 直播分区列表页面。 */
-@Serializable
-data class LiveAreaRoute(
-    val parentAreaId: Int,
-    val areaId: Int = 0,
-    val title: String,
-)
-
-/** 关注直播列表页面。 */
-@Serializable
-object LiveFollowRoute
-
-// ── 用户 ──────────────────────────────────────────────────────────────
-
-/** 用户空间页。 */
-@Serializable
-data class UserSpaceRoute(
-    val mid: Long,
-    val name: String? = null,
-    val face: String? = null,
-)
-
-/** 关注列表页。 */
-@Serializable
-data class FollowRoute(
-    val mid: Long,
-)
-
-// ── 番剧/PGC ──────────────────────────────────────────────────────────
-
-/** 番剧详情页。 */
-@Serializable
-data class PgcFeatureRoute(
-    val seasonId: Long = 0,
-    val epid: Long? = null,
-)
-
 // ── 设置 ──────────────────────────────────────────────────────────────
 
 /** 设置主页。 */
 @Serializable
 object SettingsRoute
-
-/** 账号管理页。 */
-@Serializable
-object UserSwitchRoute
 
 /** 编解码信息页。 */
 @Serializable

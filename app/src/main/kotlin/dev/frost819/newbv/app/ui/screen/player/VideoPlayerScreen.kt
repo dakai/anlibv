@@ -30,9 +30,7 @@ import dev.frost819.newbv.app.ui.component.player.VideoPlayerController
 import dev.frost819.newbv.app.ui.component.rememberDoublePressExit
 import dev.frost819.newbv.app.ui.component.videocard.VideoCardData
 import dev.frost819.newbv.app.ui.component.videocard.isPgc
-import dev.frost819.newbv.app.ui.navigation.UserSpaceRoute
 import dev.frost819.newbv.app.ui.navigation.navigateFromVideoCard
-import dev.frost819.newbv.app.ui.navigation.navigateToVideoDetailFromPlayer
 import dev.frost819.newbv.app.ui.state.player.PlayerState
 import dev.frost819.newbv.app.util.ToastUtils
 import dev.frost819.newbv.app.util.VideoShotImageCache
@@ -282,16 +280,6 @@ fun VideoPlayerScreen(
             playerViewModel.toggleLoop()
         },
         onToggleSubtitle = { subtitleViewModel.toggleSubtitle() },
-        onGoToUpPage = {
-            logger.info { "[NAV] playerToUp mid=${uiState.authorMid}" }
-            navController.navigate(UserSpaceRoute(mid = uiState.authorMid, name = uiState.authorName)) {
-                launchSingleTop = true
-            }
-        },
-        onGoToVideoDetail = {
-            logger.info { "[NAV] playerToVideoDetail aid=${uiState.aid}" }
-            navController.navigateToVideoDetailFromPlayer(uiState.aid)
-        },
         onShowInteraction = {
             logger.info { "[CARD] openVideoInteraction aid=${uiState.aid}" }
             resumeAfterInteraction = uiState.playerState == PlayerState.Playing

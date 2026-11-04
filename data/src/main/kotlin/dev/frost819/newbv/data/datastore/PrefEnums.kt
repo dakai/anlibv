@@ -200,49 +200,7 @@ enum class PlaySpeed(
 // ===== 应用界面 =====
 
 /**
- * 左侧导航项（启动页）。
- *
- * 通过 ordinal 持久化，反序列化时越界回退到 [Home]。
- * 相对原版新增 [Live] 项（PRD 7.2）。
- */
-enum class LeftNaviItem : java.io.Serializable {
-    Search,
-    Personal,
-    Home,
-    UGC,
-    PGC,
-    Live,
-    ;
-
-    companion object {
-        /** 从序号安全解析，越界返回 [Home]。 */
-        fun fromOrdinal(ordinal: Int): LeftNaviItem = entries.getOrElse(ordinal) { Home }
-    }
-}
-
-/**
- * 首页顶部 Tab。
- *
- * 通过 [code] 持久化，反序列化时未知 code 回退到 [Dynamics]。
- *
- * @property code Tab 标识。
- */
-enum class HomeTopNavItem(
-    val code: Int,
-) {
-    Dynamics(0),
-    Recommend(1),
-    Popular(2),
-    ;
-
-    companion object {
-        /** 从 code 安全解析，未知 code 返回 [Dynamics]。 */
-        fun fromCode(code: Int): HomeTopNavItem = entries.find { it.code == code } ?: Dynamics
-    }
-}
-
-/**
- * 个人页顶部 Tab。
+ * 个人页顶部 Tab（稍后再看 / 历史 / 收藏）。
  *
  * 通过 ordinal 持久化，反序列化时越界回退到 [ToView]。
  */
@@ -250,7 +208,6 @@ enum class PersonalTopNavItem {
     ToView,
     History,
     Favorite,
-    FollowingSeason,
     ;
 
     companion object {

@@ -25,7 +25,6 @@ import dev.frost819.newbv.app.ui.component.TvLazyVerticalGrid
 import dev.frost819.newbv.app.ui.component.focusSaverItem
 import dev.frost819.newbv.app.ui.component.videocard.SmallVideoCard
 import dev.frost819.newbv.app.ui.component.videocard.VideoCardData
-import dev.frost819.newbv.app.ui.navigation.UserSpaceRoute
 import dev.frost819.newbv.app.ui.navigation.navigateFromVideoCard
 import dev.frost819.newbv.app.util.formatHourMinSec
 import dev.frost819.newbv.app.viewmodel.common.CollectWatchLaterEffects
@@ -135,13 +134,6 @@ fun HistoryScreen(
                 onClick = {
                     navController.navigateFromVideoCard(cardData)
                 },
-                onGoToDetailPage = {
-                    navController.navigateFromVideoCard(cardData, forceDetail = true)
-                },
-                onGoToUpPage =
-                    item.mid?.let { mid ->
-                        { navController.navigate(UserSpaceRoute(mid = mid, name = item.author)) }
-                    },
                 onAddWatchLater = { watchLaterViewModel.addToView(aid = item.oid) },
             )
         }

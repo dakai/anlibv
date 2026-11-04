@@ -246,75 +246,14 @@ class PrefEnumsTest {
         assertThat(PlaySpeed.fromSpeed(1.5f)).isEqualTo(PlaySpeed.X1_5)
     }
 
-    // ===== LeftNaviItem =====
-
-    @Test
-    fun `LeftNaviItem fromOrdinal returns Search for 0`() {
-        assertThat(LeftNaviItem.fromOrdinal(0)).isEqualTo(LeftNaviItem.Search)
-    }
-
-    @Test
-    fun `LeftNaviItem fromOrdinal returns Personal for 1`() {
-        assertThat(LeftNaviItem.fromOrdinal(1)).isEqualTo(LeftNaviItem.Personal)
-    }
-
-    @Test
-    fun `LeftNaviItem fromOrdinal returns Home for 2`() {
-        assertThat(LeftNaviItem.fromOrdinal(2)).isEqualTo(LeftNaviItem.Home)
-    }
-
-    @Test
-    fun `LeftNaviItem fromOrdinal returns UGC for 3`() {
-        assertThat(LeftNaviItem.fromOrdinal(3)).isEqualTo(LeftNaviItem.UGC)
-    }
-
-    @Test
-    fun `LeftNaviItem fromOrdinal returns PGC for 4`() {
-        assertThat(LeftNaviItem.fromOrdinal(4)).isEqualTo(LeftNaviItem.PGC)
-    }
-
-    @Test
-    fun `LeftNaviItem fromOrdinal returns Live for 5`() {
-        assertThat(LeftNaviItem.fromOrdinal(5)).isEqualTo(LeftNaviItem.Live)
-    }
-
-    // ===== HomeTopNavItem =====
-
-    @Test
-    fun `HomeTopNavItem fromCode returns Dynamics for 0`() {
-        assertThat(HomeTopNavItem.fromCode(0)).isEqualTo(HomeTopNavItem.Dynamics)
-    }
-
-    @Test
-    fun `HomeTopNavItem fromCode returns Recommend for 1`() {
-        assertThat(HomeTopNavItem.fromCode(1)).isEqualTo(HomeTopNavItem.Recommend)
-    }
-
-    @Test
-    fun `HomeTopNavItem fromCode returns Popular for 2`() {
-        assertThat(HomeTopNavItem.fromCode(2)).isEqualTo(HomeTopNavItem.Popular)
-    }
-
     // ===== PersonalTopNavItem =====
 
     @Test
-    fun `PersonalTopNavItem fromOrdinal returns ToView for 0`() {
+    fun `PersonalTopNavItem fromOrdinal maps 0 1 2 and falls back to ToView`() {
         assertThat(PersonalTopNavItem.fromOrdinal(0)).isEqualTo(PersonalTopNavItem.ToView)
-    }
-
-    @Test
-    fun `PersonalTopNavItem fromOrdinal returns History for 1`() {
         assertThat(PersonalTopNavItem.fromOrdinal(1)).isEqualTo(PersonalTopNavItem.History)
-    }
-
-    @Test
-    fun `PersonalTopNavItem fromOrdinal returns Favorite for 2`() {
         assertThat(PersonalTopNavItem.fromOrdinal(2)).isEqualTo(PersonalTopNavItem.Favorite)
-    }
-
-    @Test
-    fun `PersonalTopNavItem fromOrdinal returns FollowingSeason for 3`() {
-        assertThat(PersonalTopNavItem.fromOrdinal(3)).isEqualTo(PersonalTopNavItem.FollowingSeason)
+        assertThat(PersonalTopNavItem.fromOrdinal(99)).isEqualTo(PersonalTopNavItem.ToView)
     }
 
     // ===== ThemeMode =====

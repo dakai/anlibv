@@ -151,8 +151,6 @@ object PlayerCustomShortcutsCodec {
             PlayerCustomShortcutAction.OpenRelatedVideos -> "open_related_videos" to buildJsonObject { }
             PlayerCustomShortcutAction.PlayPrevious -> "play_previous" to buildJsonObject { }
             PlayerCustomShortcutAction.PlayNext -> "play_next" to buildJsonObject { }
-            PlayerCustomShortcutAction.OpenVideoDetail -> "open_video_detail" to buildJsonObject { }
-            PlayerCustomShortcutAction.OpenUpPage -> "open_up_page" to buildJsonObject { }
             PlayerCustomShortcutAction.OpenComments -> "open_comments" to buildJsonObject { }
             PlayerCustomShortcutAction.OpenInteraction -> "open_interaction" to buildJsonObject { }
             PlayerCustomShortcutAction.ToggleLoop -> "toggle_loop" to buildJsonObject { }
@@ -175,8 +173,6 @@ object PlayerCustomShortcutsCodec {
             "open_related_videos" -> PlayerCustomShortcutAction.OpenRelatedVideos
             "play_previous" -> PlayerCustomShortcutAction.PlayPrevious
             "play_next" -> PlayerCustomShortcutAction.PlayNext
-            "open_video_detail" -> PlayerCustomShortcutAction.OpenVideoDetail
-            "open_up_page" -> PlayerCustomShortcutAction.OpenUpPage
             "open_comments" -> PlayerCustomShortcutAction.OpenComments
             "open_interaction" -> PlayerCustomShortcutAction.OpenInteraction
             "toggle_loop" -> PlayerCustomShortcutAction.ToggleLoop

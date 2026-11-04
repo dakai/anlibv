@@ -81,7 +81,7 @@ android {
             variant.outputs.forEach { output ->
                 if (output is com.android.build.api.variant.impl.VariantOutputImpl) {
                     output.outputFileName.set(
-                        "newBV_${AppConfiguration.versionCode}_${AppConfiguration.versionName}_${variant.name}.apk",
+                        "anlibv_${AppConfiguration.versionCode}_${AppConfiguration.versionName}_${variant.name}.apk",
                     )
                 }
             }

@@ -5,8 +5,11 @@
  * 供各模块 build.gradle.kts 引用。
  */
 object AppConfiguration {
+    /** 源码 namespace（Kotlin 包名、R 类），与 [applicationId] 解耦。 */
     const val appId = "dev.frost819.newbv"
-    const val applicationId = "dev.frost819.newbv"
+
+    /** 安装包标识，独立于上游 newBV，可与上游同时安装。 */
+    const val applicationId = "dev.dakai.anlibv"
     const val compileSdk = 36
     const val minSdk = 21
     const val targetSdk = 36

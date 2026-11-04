@@ -16,11 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import dev.frost819.newbv.app.ui.component.PlaceholderScreen
-import dev.frost819.newbv.app.ui.navigation.LivePlayerRoute
-import dev.frost819.newbv.app.ui.navigation.SeasonPlayerRoute
 import dev.frost819.newbv.app.ui.navigation.VideoPlayerRoute
-import dev.frost819.newbv.app.ui.state.live.LivePlayerState
 import dev.frost819.newbv.app.ui.state.player.PlayerState
 import dev.frost819.newbv.app.viewmodel.player.DanmakuViewModel
 import dev.frost819.newbv.app.viewmodel.player.PlayerViewModel
@@ -84,7 +80,7 @@ fun NavGraphBuilder.videoPlayerScreen(navController: NavController) {
             playerViewModel.loadVideoWithResources()
         }
 
-        // 离开页面（如打开详情/UP 主空间）时暂停；播放器与弹幕保留在 ViewModel 中，返回后保持暂停
+        // 离开页面时暂停；播放器与弹幕保留在 ViewModel 中，返回后保持暂停
         DisposableEffect(Unit) {
             onDispose {
                 playerViewModel.pausePlayback()
@@ -104,52 +100,6 @@ fun NavGraphBuilder.videoPlayerScreen(navController: NavController) {
             danmakuViewModel = danmakuViewModel,
             subtitleViewModel = subtitleViewModel,
             videoListViewModel = videoListViewModel,
-        )
-    }
-}
-
-fun NavGraphBuilder.seasonPlayerScreen(navController: NavController) {
-    composable<SeasonPlayerRoute> { backStackEntry ->
-        val route = backStackEntry.toRoute<SeasonPlayerRoute>()
-        PlaceholderScreen(title = "Season Player (epid=${route.epid}, sid=${route.sid})")
-    }
-}
-
-fun NavGraphBuilder.livePlayerScreen(navController: NavController) {
-    composable<LivePlayerRoute> { backStackEntry ->
-        val route = backStackEntry.toRoute<LivePlayerRoute>()
-        val context = LocalContext.current
-        val viewModel: dev.frost819.newbv.app.viewmodel.live.LivePlayerViewModel = hiltViewModel()
-        val danmakuViewModel: DanmakuViewModel = hiltViewModel()
-
-        LaunchedEffect(route.roomId) {
-            viewModel.init(
-                roomId = route.roomId,
-                title = route.title,
-                cover = route.cover,
-            )
-            danmakuViewModel.init()
-            viewModel.initVideoPlayer(context)
-            viewModel.loadLive(route.roomId, danmakuViewModel.danmakuPlayer)
-        }
-
-        DisposableEffect(Unit) {
-            onDispose {
-                viewModel.detachPlayer()
-                danmakuViewModel.release()
-            }
-        }
-
-        // 全屏 + 隐藏系统栏，并按播放状态保持屏幕常亮（issue #283）
-        val liveUiState by viewModel.uiState.collectAsState()
-        PlayerWindowEffect(
-            keepScreenOn = liveUiState.playerState == LivePlayerState.Playing || liveUiState.isBuffering,
-        )
-
-        LivePlayerScreen(
-            navController = navController,
-            viewModel = viewModel,
-            danmakuViewModel = danmakuViewModel,
         )
     }
 }

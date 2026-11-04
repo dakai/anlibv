@@ -18,6 +18,5 @@ data class PersonalTabItem(
             PersonalTopNavItem.ToView -> "稍后再看"
             PersonalTopNavItem.History -> "历史"
             PersonalTopNavItem.Favorite -> "收藏"
-            PersonalTopNavItem.FollowingSeason -> "追番"
         }
 }

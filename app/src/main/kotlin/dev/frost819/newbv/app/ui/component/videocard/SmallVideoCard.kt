@@ -61,8 +61,6 @@ import dev.frost819.newbv.core.interaction.currentInputMethod
  * @param data 卡片数据。
  * @param onClick 点击卡片回调。
  * @param onAddWatchLater 稍后再看回调（null 时不显示按钮）。
- * @param onGoToDetailPage 详情页回调（null 时不显示按钮）。
- * @param onGoToUpPage UP 主页回调（null 时不显示按钮）。
  * @param onRemoveWatchLater 移除稍后再看回调（null 时不显示按钮）。
  */
 @Composable
@@ -71,8 +69,6 @@ fun SmallVideoCard(
     data: VideoCardData,
     onClick: () -> Unit,
     onAddWatchLater: (() -> Unit)? = null,
-    onGoToDetailPage: (() -> Unit)? = null,
-    onGoToUpPage: (() -> Unit)? = null,
     onRemoveWatchLater: (() -> Unit)? = null,
 ) {
     var showActions by remember { mutableStateOf(false) }
@@ -82,8 +78,6 @@ fun SmallVideoCard(
 
     val hasAnyAction =
         onAddWatchLater != null ||
-            onGoToDetailPage != null ||
-            onGoToUpPage != null ||
             onRemoveWatchLater != null
 
     BackHandler(enabled = showActions) {
@@ -194,85 +188,6 @@ fun SmallVideoCard(
                             Icon(
                                 painter = painterResource(id = R.drawable.add_to_list),
                                 contentDescription = "稍后再看",
-                            )
-                        }
-                    }
-
-                    onGoToDetailPage?.let { action ->
-                        val detailIsFirst = onRemoveWatchLater == null && onAddWatchLater == null
-                        IconButton(
-                            onClick = {
-                                if (!isTouchMode && detailIsFirst && !releaseLongPress) {
-                                    releaseLongPress = true
-                                    return@IconButton
-                                }
-                                action()
-                            },
-                            modifier =
-                                if (detailIsFirst) {
-                                    Modifier
-                                        .focusRequester(firstButtonRequester)
-                                        .touchClickable(onClick = {
-                                            if (!isTouchMode && detailIsFirst && !releaseLongPress) {
-                                                releaseLongPress = true
-                                            } else {
-                                                action()
-                                            }
-                                        })
-                                } else {
-                                    Modifier.touchClickable(onClick = {
-                                        if (!isTouchMode && detailIsFirst && !releaseLongPress) {
-                                            releaseLongPress = true
-                                        } else {
-                                            action()
-                                        }
-                                    })
-                                },
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.info_24px),
-                                contentDescription = "详情",
-                            )
-                        }
-                    }
-
-                    onGoToUpPage?.let { action ->
-                        val upIsFirst =
-                            onRemoveWatchLater == null &&
-                                onAddWatchLater == null &&
-                                onGoToDetailPage == null
-                        IconButton(
-                            onClick = {
-                                if (!isTouchMode && upIsFirst && !releaseLongPress) {
-                                    releaseLongPress = true
-                                    return@IconButton
-                                }
-                                action()
-                            },
-                            modifier =
-                                if (upIsFirst) {
-                                    Modifier
-                                        .focusRequester(firstButtonRequester)
-                                        .touchClickable(onClick = {
-                                            if (!isTouchMode && upIsFirst && !releaseLongPress) {
-                                                releaseLongPress = true
-                                            } else {
-                                                action()
-                                            }
-                                        })
-                                } else {
-                                    Modifier.touchClickable(onClick = {
-                                        if (!isTouchMode && upIsFirst && !releaseLongPress) {
-                                            releaseLongPress = true
-                                        } else {
-                                            action()
-                                        }
-                                    })
-                                },
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.contact_page_24px),
-                                contentDescription = "UP主主页",
                             )
                         }
                     }

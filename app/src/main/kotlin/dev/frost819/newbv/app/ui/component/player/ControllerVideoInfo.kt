@@ -92,9 +92,7 @@ import kotlinx.coroutines.delay
  * @param onDanmakuSwitchChange 弹幕开关回调
  * @param onShowSettings 打开设置回调
  * @param onShowRelatedVideos 打开相关视频回调
- * @param onGoToVideoInfo 跳转视频详情回调
  * @param onToggleLoop 切换循环回调
- * @param onGoToUpPage 跳转 UP 主页面回调
  * @param onShowInteraction 打开视频交互弹窗回调
  * @param onShowComments 打开评论弹窗回调
  */
@@ -121,9 +119,7 @@ fun ControllerVideoInfo(
     onDanmakuSwitchChange: () -> Unit,
     onShowSettings: () -> Unit,
     onShowRelatedVideos: () -> Unit,
-    onGoToVideoInfo: () -> Unit,
     onToggleLoop: () -> Unit,
-    onGoToUpPage: () -> Unit,
     onShowInteraction: () -> Unit,
     onShowComments: () -> Unit,
 ) {
@@ -167,9 +163,7 @@ fun ControllerVideoInfo(
                 onDanmakuSwitchChange = onDanmakuSwitchChange,
                 onShowSettings = onShowSettings,
                 onShowRelatedVideos = onShowRelatedVideos,
-                onGoToVideoInfo = onGoToVideoInfo,
                 onToggleLoop = onToggleLoop,
-                onGoToUpPage = onGoToUpPage,
                 onShowInteraction = onShowInteraction,
                 onShowComments = onShowComments,
             )
@@ -278,9 +272,7 @@ fun ControllerVideoInfoBottom(
     onDanmakuSwitchChange: () -> Unit,
     onShowSettings: () -> Unit,
     onShowRelatedVideos: () -> Unit,
-    onGoToVideoInfo: () -> Unit,
     onToggleLoop: () -> Unit,
-    onGoToUpPage: () -> Unit,
     onShowInteraction: () -> Unit,
     onShowComments: () -> Unit,
 ) {
@@ -431,8 +423,6 @@ fun ControllerVideoInfoBottom(
                 )
                 add(ControllerIcon(R.drawable.settings_24px, "打开设置", onShowSettings))
                 if (!isPgc) {
-                    add(ControllerIcon(R.drawable.info_24px, "视频信息", onGoToVideoInfo))
-                    add(ControllerIcon(R.drawable.contact_page_24px, "up主页", onGoToUpPage))
                     add(ControllerIcon(R.drawable.related_videos_24px, "相关视频", onShowRelatedVideos))
                 }
                 add(
@@ -561,9 +551,7 @@ private fun ControllerVideoInfoPreview() {
             onDanmakuSwitchChange = {},
             onShowSettings = {},
             onShowRelatedVideos = {},
-            onGoToVideoInfo = {},
             onToggleLoop = {},
-            onGoToUpPage = {},
             onShowInteraction = {},
             onShowComments = {},
         )

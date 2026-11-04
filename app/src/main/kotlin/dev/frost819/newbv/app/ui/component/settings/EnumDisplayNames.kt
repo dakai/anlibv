@@ -3,7 +3,6 @@ package dev.frost819.newbv.app.ui.component.settings
 import dev.frost819.newbv.data.datastore.ActionAfterPlay
 import dev.frost819.newbv.data.datastore.ApiType
 import dev.frost819.newbv.data.datastore.Audio
-import dev.frost819.newbv.data.datastore.HomeTopNavItem
 import dev.frost819.newbv.data.datastore.PersonalTopNavItem
 import dev.frost819.newbv.data.datastore.PlaySpeed
 import dev.frost819.newbv.data.datastore.Resolution
@@ -87,15 +86,6 @@ val ThemeMode.displayName: String
             ThemeMode.Light -> "浅色"
         }
 
-/** 首页 Tab 显示名称。 */
-val HomeTopNavItem.displayName: String
-    get() =
-        when (this) {
-            HomeTopNavItem.Dynamics -> "动态"
-            HomeTopNavItem.Recommend -> "推荐"
-            HomeTopNavItem.Popular -> "热门"
-        }
-
 /** 个人页 Tab 显示名称。 */
 val PersonalTopNavItem.displayName: String
     get() =
@@ -103,5 +93,4 @@ val PersonalTopNavItem.displayName: String
             PersonalTopNavItem.ToView -> "稍后再看"
             PersonalTopNavItem.History -> "历史"
             PersonalTopNavItem.Favorite -> "收藏"
-            PersonalTopNavItem.FollowingSeason -> "追番"
         }

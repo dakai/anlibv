@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dev.frost819.newbv.BuildConfig
 import dev.frost819.newbv.app.data.AccountRepositoryImpl
+import dev.frost819.newbv.app.data.anlibili.AnlibiliRepository
 import dev.frost819.newbv.app.network.HttpServer
 import dev.frost819.newbv.biliapi.http.BiliHttpApi
 import dev.frost819.newbv.biliapi.repositories.AuthRepository
@@ -361,6 +362,19 @@ object NetworkModule {
         }
 
     /**
+     * 提供 [AnlibiliRepository] 单例。
+     *
+     * 数据来自 anlibili 站点的静态 videos.json，与 B 站接口无关，
+     * 复用共享 [HttpClient] 拉取整表，按「每天一次」写入 [Context.getCacheDir]。
+     */
+    @Provides
+    @Singleton
+    fun provideAnlibiliRepository(
+        @ApplicationContext context: Context,
+        httpClient: HttpClient,
+    ): AnlibiliRepository = AnlibiliRepository(cacheDir = context.cacheDir, httpClient = httpClient)
+
+    /**
      * 提供 [HttpServer] 单例。
      *
      * Ktor 本地日志管理服务器，在随机端口启动，提供 Web UI 和 REST API。
@@ -371,6 +385,9 @@ object NetworkModule {
      *
      * 依赖 [CrashHandler]（日志文件读写）。
      * 由 [dev.frost819.newbv.app.BVApplication] 在应用启动时调用 [HttpServer.start] 启动。
+     *
+     * @param context 应用上下文（读取 assets）。
+     * @param crashHandler 日志文件提供者。
      */
     @Provides
     @Singleton

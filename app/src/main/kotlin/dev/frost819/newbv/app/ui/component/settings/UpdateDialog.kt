@@ -91,7 +91,7 @@ fun UpdateDialog(
                 val revision =
                     latestRelease!!
                         .assets
-                        .first { it.name.startsWith("newBV") && it.name.contains("release") }
+                        .first { it.name.startsWith("anlibv") && it.name.contains("release") }
                         .name
                         .split("_")[1]
                         .toInt()
@@ -158,7 +158,7 @@ fun UpdateDialog(
                 val tempFilename =
                     latestRelease!!
                         .assets
-                        .first { it.name.startsWith("newBV") && it.name.contains("release") }
+                        .first { it.name.startsWith("anlibv") && it.name.contains("release") }
                         .name
                 val tempDir = File(context.cacheDir, "update_downloader")
                 if (!tempDir.exists()) tempDir.mkdirs()
@@ -256,7 +256,7 @@ fun UpdateDialog(
                         Text(
                             text =
                                 "未授予「安装未知应用」权限，安装器无法启动。" +
-                                    "请到系统设置中允许 newBV 安装应用，然后点击「重试」。",
+                                    "请到系统设置中允许 anlibv 安装应用，然后点击「重试」。",
                         )
                     }
 

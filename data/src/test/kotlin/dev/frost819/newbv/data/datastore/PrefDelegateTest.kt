@@ -214,11 +214,8 @@ class PrefDelegateTest {
             Prefs.defaultSubtitleFontSize = 36
             Prefs.defaultSubtitleBackgroundOpacity = 0.6f
             Prefs.defaultSubtitleBottomPadding = 20
-            Prefs.showVideoInfo = false
             Prefs.showPersistentSeek = true
             Prefs.showPlayerDebugInfo = true
-            Prefs.firstHomeTopNavItem = HomeTopNavItem.Recommend
-            Prefs.firstPersonalTopNavItem = PersonalTopNavItem.History
             Prefs.showHotword = false
             Prefs.cacheThreshold = 300
             Prefs.playerCustomShortcuts = "[{\"key\":\"test\"}]"
@@ -229,7 +226,6 @@ class PrefDelegateTest {
             assertThat(Prefs.enableSoftwareVideoDecoder).isTrue()
             assertThat(Prefs.defaultDanmakuScale).isEqualTo(2.0f)
             assertThat(Prefs.showPlayerDebugInfo).isTrue()
-            assertThat(Prefs.firstHomeTopNavItem).isEqualTo(HomeTopNavItem.Recommend)
             assertThat(Prefs.defaultDanmakuSpeedFactor).isEqualTo(2.0f)
         }
 

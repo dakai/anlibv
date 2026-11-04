@@ -7,14 +7,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.frost819.newbv.biliapi.entity.FavoriteFolderData
 import dev.frost819.newbv.biliapi.entity.FavoriteFolderMetadata
 import dev.frost819.newbv.biliapi.entity.FavoriteItem
-import dev.frost819.newbv.biliapi.entity.season.FollowingSeason
-import dev.frost819.newbv.biliapi.entity.season.FollowingSeasonStatus
-import dev.frost819.newbv.biliapi.entity.season.FollowingSeasonType
 import dev.frost819.newbv.biliapi.entity.user.HistoryItem
 import dev.frost819.newbv.biliapi.entity.user.ToViewItem
 import dev.frost819.newbv.biliapi.repositories.FavoriteRepository
 import dev.frost819.newbv.biliapi.repositories.HistoryRepository
-import dev.frost819.newbv.biliapi.repositories.SeasonRepository
 import dev.frost819.newbv.biliapi.repositories.ToViewRepository
 import dev.frost819.newbv.core.log.Loggers
 import dev.frost819.newbv.data.datastore.Prefs
@@ -45,7 +41,7 @@ sealed interface PersonalUiEffect {
 /**
  * 个人页 UI 状态。
  *
- * 管理稍后再看、历史、收藏、追番四个 Tab 的数据。
+ * 管理稍后再看、历史、收藏三个 Tab 的数据。
  *
  * @property toViewLoading 稍后再看加载中。
  * @property toViewError 稍后再看加载失败。
@@ -59,12 +55,6 @@ sealed interface PersonalUiEffect {
  * @property favoriteError 收藏加载失败。
  * @property favoriteHasMore 收藏夹是否还有更多。
  * @property currentFolderId 当前选中的收藏夹 ID。
- * @property followingSeasons 追番列表。
- * @property followingLoading 追番加载中。
- * @property followingError 追番加载失败。
- * @property followingHasMore 追番是否还有更多。
- * @property followingType 追番类型筛选。
- * @property followingStatus 追番状态筛选。
  * @property isLogin 是否已登录。
  */
 data class PersonalUiState(
@@ -80,25 +70,18 @@ data class PersonalUiState(
     val favoriteError: Boolean = false,
     val favoriteHasMore: Boolean = true,
     val currentFolderId: Long = -1L,
-    val followingSeasons: List<FollowingSeason> = emptyList(),
-    val followingLoading: Boolean = false,
-    val followingError: Boolean = false,
-    val followingHasMore: Boolean = true,
-    val followingType: FollowingSeasonType = FollowingSeasonType.Bangumi,
-    val followingStatus: FollowingSeasonStatus = FollowingSeasonStatus.All,
     val isLogin: Boolean = false,
 )
 
 /**
  * 个人页 ViewModel。
  *
- * 管理稍后再看、历史、收藏、追番四个 Tab 的数据加载、分页、刷新。
+ * 管理稍后再看、历史、收藏三个 Tab 的数据加载、分页、刷新。
  * 使用 [StateFlow] 暴露状态，UI 通过 [uiState] 观察。
  *
  * @property toViewRepository 稍后再看仓库。
  * @property historyRepository 历史仓库。
  * @property favoriteRepository 收藏仓库。
- * @property seasonRepository 追番仓库。
  */
 @HiltViewModel
 class PersonalViewModel
@@ -107,7 +90,6 @@ class PersonalViewModel
         private val toViewRepository: ToViewRepository,
         private val historyRepository: HistoryRepository,
         private val favoriteRepository: FavoriteRepository,
-        private val seasonRepository: SeasonRepository,
     ) : ViewModel() {
         private val logger = Loggers.get("PersonalViewModel")
 
@@ -127,8 +109,6 @@ class PersonalViewModel
 
         private var historyCursor: Long = 0L
         private var favoritePageNumber: Int = 1
-        private var followingPageNumber: Int = 1
-        private var followingTotal: Int = 0
 
         init {
             _uiState.update { it.copy(isLogin = Prefs.isLogin) }
@@ -136,7 +116,6 @@ class PersonalViewModel
                 loadToView()
                 loadHistory()
                 loadFavoriteFolders()
-                loadFollowingSeasons()
             }
         }
 
@@ -390,92 +369,6 @@ class PersonalViewModel
 
         // endregion
 
-        // region FollowingSeason
-
-        /**
-         * 加载更多追番列表。
-         *
-         * 使用页码分页，每页 30 条。
-         */
-        fun loadFollowingSeasons() {
-            viewModelScope.launch {
-                val current = _uiState.value
-                if (current.followingLoading || !current.followingHasMore) return@launch
-
-                _uiState.update { it.copy(followingLoading = true, followingError = false) }
-
-                runCatching {
-                    withTimeout(LOAD_TIMEOUT_MS) {
-                        val data =
-                            seasonRepository.getFollowingSeasons(
-                                type = current.followingType,
-                                status = current.followingStatus,
-                                pageNumber = followingPageNumber,
-                                preferApiType = prefApiType(),
-                            )
-                        followingPageNumber++
-                        followingTotal = data.total
-                        _uiState.update {
-                            it.copy(
-                                followingSeasons = it.followingSeasons + data.list,
-                                followingHasMore = it.followingSeasons.size + data.list.size < followingTotal,
-                            )
-                        }
-                    }
-                }.onFailure { error ->
-                    if (error is CancellationException && error !is TimeoutCancellationException) {
-                        throw error
-                    }
-                    logger.error(error) { "Failed to load following seasons" }
-                    _uiState.update { it.copy(followingError = true) }
-                }
-
-                _uiState.update { it.copy(followingLoading = false) }
-            }
-        }
-
-        /**
-         * 设置追番筛选条件并重新加载。
-         *
-         * @param type 类型（Bangumi/Cinema）。
-         * @param status 状态（All/Want/Watching/Watched）。
-         */
-        fun setFollowingFilter(
-            type: FollowingSeasonType,
-            status: FollowingSeasonStatus,
-        ) {
-            followingPageNumber = 1
-            followingTotal = 0
-            _uiState.update {
-                it.copy(
-                    followingType = type,
-                    followingStatus = status,
-                    followingSeasons = emptyList(),
-                    followingHasMore = true,
-                    followingError = false,
-                )
-            }
-            loadFollowingSeasons()
-        }
-
-        /**
-         * 刷新追番列表。
-         */
-        fun refreshFollowingSeasons() {
-            followingPageNumber = 1
-            followingTotal = 0
-            _uiState.update {
-                it.copy(
-                    followingSeasons = emptyList(),
-                    followingHasMore = true,
-                    followingError = false,
-                )
-            }
-            loadFollowingSeasons()
-        }
-
-        // endregion
-
         /**
          * 刷新指定 Tab 的数据。
          *
@@ -486,7 +379,6 @@ class PersonalViewModel
                 dev.frost819.newbv.data.datastore.PersonalTopNavItem.ToView -> refreshToView()
                 dev.frost819.newbv.data.datastore.PersonalTopNavItem.History -> refreshHistory()
                 dev.frost819.newbv.data.datastore.PersonalTopNavItem.Favorite -> refreshFavorite()
-                dev.frost819.newbv.data.datastore.PersonalTopNavItem.FollowingSeason -> refreshFollowingSeasons()
             }
         }
     }

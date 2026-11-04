@@ -45,9 +45,7 @@ class ControllerVideoInfoBottomTest {
                         onDanmakuSwitchChange = {},
                         onShowSettings = {},
                         onShowRelatedVideos = {},
-                        onGoToVideoInfo = {},
                         onToggleLoop = {},
-                        onGoToUpPage = {},
                         onShowInteraction = {},
                         onShowComments = {},
                     )

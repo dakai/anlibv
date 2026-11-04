@@ -89,8 +89,6 @@ fun VideoPlayerController(
     onPlayNext: () -> Unit,
     onToggleLoop: () -> Unit,
     onToggleSubtitle: () -> Unit,
-    onGoToUpPage: () -> Unit,
-    onGoToVideoDetail: () -> Unit,
     onShowInteraction: () -> Unit,
     onShowComments: () -> Unit,
     onMediaProfileSettingChange: (MediaProfileSettingAction) -> Unit,
@@ -247,8 +245,6 @@ fun VideoPlayerController(
             PlayerCustomShortcutAction.OpenRelatedVideos -> showRelatedVideosController = true
             PlayerCustomShortcutAction.PlayPrevious -> onPlayPrevious()
             PlayerCustomShortcutAction.PlayNext -> onPlayNext()
-            PlayerCustomShortcutAction.OpenVideoDetail -> onGoToVideoDetail()
-            PlayerCustomShortcutAction.OpenUpPage -> onGoToUpPage()
             PlayerCustomShortcutAction.OpenComments -> onShowComments()
             PlayerCustomShortcutAction.OpenInteraction -> onShowInteraction()
             PlayerCustomShortcutAction.ToggleLoop -> {
@@ -256,7 +252,7 @@ fun VideoPlayerController(
                 onToggleLoop()
             }
             PlayerCustomShortcutAction.ToggleDanmaku -> {
-                status = if (uiState.danmakuState.enabledTypes.isEmpty()) "开" else "关"
+                status = if (uiState.danmakuState.enabledTypes.isEmpty()) "关" else "开"
                 onToggleDanmaku()
             }
             PlayerCustomShortcutAction.ToggleSubtitle -> {
@@ -571,9 +567,7 @@ fun VideoPlayerController(
                 onDanmakuSwitchChange = { onToggleDanmaku() },
                 onShowSettings = { showMenuController = true },
                 onShowRelatedVideos = { showRelatedVideosController = true },
-                onGoToVideoInfo = onGoToVideoDetail,
                 onToggleLoop = { onToggleLoop() },
-                onGoToUpPage = onGoToUpPage,
                 onShowInteraction = onShowInteraction,
                 onShowComments = onShowComments,
             )

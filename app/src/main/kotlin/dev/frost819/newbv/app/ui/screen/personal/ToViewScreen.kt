@@ -25,7 +25,6 @@ import dev.frost819.newbv.app.ui.component.TvLazyVerticalGrid
 import dev.frost819.newbv.app.ui.component.focusSaverItem
 import dev.frost819.newbv.app.ui.component.videocard.SmallVideoCard
 import dev.frost819.newbv.app.ui.component.videocard.VideoCardData
-import dev.frost819.newbv.app.ui.navigation.UserSpaceRoute
 import dev.frost819.newbv.app.ui.navigation.navigateFromVideoCard
 import dev.frost819.newbv.app.util.ToastUtils
 import dev.frost819.newbv.app.util.formatHourMinSec
@@ -130,16 +129,9 @@ fun ToViewScreen(
                     onClick = {
                         navController.navigateFromVideoCard(cardData)
                     },
-                    onGoToDetailPage = {
-                        navController.navigateFromVideoCard(cardData, forceDetail = true)
-                    },
                     onRemoveWatchLater = {
                         viewModel.delToView(aid = item.oid)
                     },
-                    onGoToUpPage =
-                        item.mid?.let { mid ->
-                            { navController.navigate(UserSpaceRoute(mid = mid, name = item.author)) }
-                        },
                 )
             }
         }
@@ -173,16 +165,9 @@ fun ToViewScreen(
                     onClick = {
                         navController.navigateFromVideoCard(cardData)
                     },
-                    onGoToDetailPage = {
-                        navController.navigateFromVideoCard(cardData, forceDetail = true)
-                    },
                     onRemoveWatchLater = {
                         viewModel.delToView(aid = item.oid)
                     },
-                    onGoToUpPage =
-                        item.mid?.let { mid ->
-                            { navController.navigate(UserSpaceRoute(mid = mid, name = item.author)) }
-                        },
                 )
             }
         }

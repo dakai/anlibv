@@ -293,10 +293,15 @@ object Prefs {
 
     // --- 播放器 - 弹幕（PRD 7.3） ---
 
-    /** 默认弹幕类型（多选，逗号分隔的序号字符串）。 */
+    /**
+     * 默认弹幕类型（多选，逗号分隔的序号字符串）。
+     *
+     * 默认空列表 = 不显示任何类型，即弹幕缺省关闭；用户在播放器里打开后
+     * 选择会被持久化，下次进入播放器沿用。
+     */
     var defaultDanmakuTypes by pref(
         PrefKeys.defaultDanmakuTypes,
-        listOf(DanmakuType.All, DanmakuType.Rolling, DanmakuType.Top, DanmakuType.Bottom),
+        emptyList(),
         save = { list -> list.joinToString(",") { it.ordinal.toString() } },
         restore = { str ->
             if (str.isEmpty()) {
@@ -345,9 +350,6 @@ object Prefs {
         restore = { PlaySpeed.fromCode(it) },
     )
 
-    /** 显示视频详情页（关闭后点击直接播放）。 */
-    var showVideoInfo by pref(PrefKeys.showVideoInfo, true)
-
     /** 显示常显进度条。 */
     var showPersistentSeek by pref(PrefKeys.showPersistentSeek, false)
 
@@ -358,22 +360,6 @@ object Prefs {
 
     /** 界面缩放密度（默认 1f，app 层 init 时按屏幕宽度重新计算）。 */
     var density by pref(PrefKeys.density, 2f)
-
-    /** 启动页（左侧导航项）。 */
-    var homeLeftNavItem by pref(
-        PrefKeys.homeLeftNavItem,
-        LeftNaviItem.Home,
-        save = { it.ordinal },
-        restore = { LeftNaviItem.fromOrdinal(it) },
-    )
-
-    /** 首页置顶 Tab。 */
-    var firstHomeTopNavItem by pref(
-        PrefKeys.firstHomeTopNavItem,
-        HomeTopNavItem.Dynamics,
-        save = { it.code },
-        restore = { HomeTopNavItem.fromCode(it) },
-    )
 
     /** 个人页置顶 Tab。 */
     var firstPersonalTopNavItem by pref(

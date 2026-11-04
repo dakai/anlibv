@@ -31,8 +31,6 @@ class PlayerCustomShortcutsTest {
                 PlayerCustomShortcutAction.OpenRelatedVideos,
                 PlayerCustomShortcutAction.PlayPrevious,
                 PlayerCustomShortcutAction.PlayNext,
-                PlayerCustomShortcutAction.OpenVideoDetail,
-                PlayerCustomShortcutAction.OpenUpPage,
                 PlayerCustomShortcutAction.ToggleLoop,
                 PlayerCustomShortcutAction.ToggleDanmaku,
                 PlayerCustomShortcutAction.ToggleDanmakuMask,
