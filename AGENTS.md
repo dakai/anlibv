@@ -26,6 +26,7 @@ anlibv 把 [anlibili](https://anlibili-site-bxlxh4ai.teamily.run/) 的「网友�
 保留：
 
 - anlibili 列表：11 个频道（推荐 / 新近好评 / AI / 知识 / 编程 / 科技 / 影视 / 运动 / 生活 / 游戏 / 动画）。
+- 搜索：按标题 / UP 名在已拉取的站点条目里过滤，带标题联想；纯内存，不发搜索请求（见 §5.1）。
 - 播放器：Media3 + 弹幕（`danmaku-engine`）+ 字幕 + 评论弹窗 + 一键三连、点赞、投币、收藏。
 - 个人页：稍后再看 / 历史 / 收藏（需登录）。
 - 设置：播放设置、界面设置、存储管理、设备信息、编解码、日志、关于。
@@ -37,7 +38,6 @@ anlibv 把 [anlibili](https://anlibili-site-bxlxh4ai.teamily.run/) 的「网友�
 |---|---|
 | 首页 推荐/热门/动态 | 列表数据全部来自 anlibili |
 | 分区 UGC、影视 PGC、直播 | 同上 |
-| 搜索 | 站点只有标题/UP 过滤，未做搜索 UI |
 | 视频详情页、UP 主页 | 卡片直接进播放器 |
 | 追番 | 用户明确只要 收藏/历史/稍后再看 |
 | 用户切换面板、关注列表 | 依赖已删页面 |
@@ -88,6 +88,17 @@ AnlibiliContent                           # 频道 + 4 列网格
 4. 屏蔽表采用「宁缺勿滥」：只收明确的政治宣传账号与话术，不收「央视 / 香港 / 台湾 / 社会 / 美国」这类高频通用词，避免误杀纪录片、音乐与科技内容。新增条目只加进 `AUTHORS` / `KEYWORDS` 两个列表。
 5. 命中数打印在日志：`Filtered anlibili videos: N visible, M blocked`。
 
+### 5.1 搜索（内存过滤）
+
+`SearchViewModel.loadIfNeeded()` → `AnlibiliRepository.videos()` → 内存里用 `AnlibiliSearch.kt` 的两个纯函数：
+
+- `searchVideos(query)`：匹配标题或 UP 名，排序「标题前缀 > 标题包含 > UP 名包含」，同档保持站点顺序；空关键词返回空列表。
+- `suggestTitles(query, limit = 6)`：标题去重后按命中位置排序，排除与关键词完全相同的标题。
+
+归一化口径（小写 + 去空白）与屏蔽表一致。UI 状态机：输入 → 联想可见（`submitted = false`）；IME 搜索键 / 遥控器确定 / 点选联想 → `submitted = true` 显示结果网格；再次输入回到联想态。
+
+焦点 key 前缀：anlibili 页 `ANLIBILI_FOCUS_PREFIX`、搜索页 `SEARCH_FOCUS_PREFIX`，两者共用 `AnlibiliVideoGrid` 与 `anlibiliFocusKey()`；新增页面复用网格时必须给新前缀，否则焦点恢复会串页。
+
 ## 6. 播放链路
 
 ```
@@ -105,7 +116,7 @@ AnlibiliContent                           # 频道 + 4 列网格
 
 ## 7. 个人页与登录
 
-- `MainScreen` 用 `MainSection` 切换内容区：`Anlibili` / `Personal`；左侧栏 `LeftNaviContent` 只有 账号 / 精选 / 我的 / 设置 四项。
+- `MainScreen` 用 `MainSection` 切换内容区：`Anlibili` / `Search` / `Personal`；左侧栏 `LeftNaviContent` 只有 账号 / 精选 / 搜索 / 我的 / 设置 五项。
 - `PersonalContent` = `TopNav`（`PersonalTopNavItem`：稍后再看 / 历史 / 收藏）+ 三个列表页；菜单键刷新当前 Tab。
 - 数据层 `PersonalViewModel` 只在 `Prefs.isLogin` 为真时加载；未登录显示空态文案（上游行为，没有登录引导）。
 - 接口：稍后再看 `/x/v2/history/toview*`、历史 `/x/v3/history`、收藏 `/x/v3/fav/folder*`（仓库在 `bili-api`，不要复制实现）。
@@ -189,5 +200,6 @@ git show <sha> -- <paths> | git apply -3          # 首选：只取需要的 hun
 | 列表内容变少/变多 | 是否命中 `AnlibiliBlocklist`；`Filtered ... blocked` 数字变化 |
 | 装不上 | `INSTALL_FAILED_UPDATE_INCOMPATIBLE`（签名不同）或 `VERSION_DOWNGRADE`（versionCode 回退） |
 | 首帧无焦点 | `AnlibiliContent` 的首项聚焦 `LaunchedEffect` 是否被 `FocusSaver` 的旧 key 短路 |
+| 搜索无结果 | 站点数据是否已加载（`loading`）；关键词是否被归一化后变空；确认没有把「搜索」误当成全表浏览（空关键词返回空列表） |
 | 弹幕不显示 | `Prefs.defaultDanmakuTypes` 是否为空（默认关闭）；播放器中是否手动开启 |
 | 个人页全空 | 是否已登录（`Prefs.isLogin`）；未登录不会请求接口 |

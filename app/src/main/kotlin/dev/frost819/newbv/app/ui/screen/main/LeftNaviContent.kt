@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PlaylistPlay
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -43,6 +44,9 @@ import dev.frost819.newbv.core.focus.isKeyDown
 enum class MainSection {
     /** anlibili 视频列表。 */
     Anlibili,
+
+    /** 搜索（标题 / UP 主，带标题联想）。 */
+    Search,
 
     /** 个人页（稍后再看 / 历史 / 收藏）。 */
     Personal,
@@ -155,6 +159,30 @@ fun LeftNaviContent(
                     Icon(
                         imageVector = Icons.Default.PlaylistPlay,
                         contentDescription = "精选",
+                    )
+                },
+            )
+
+            var searchIsFocused by remember { mutableStateOf(false) }
+            NavigationRailItem(
+                modifier =
+                    Modifier
+                        .onFocusChanged { searchIsFocused = it.hasFocus }
+                        .selectionIndicator(
+                            if (section ==
+                                MainSection.Search
+                            ) {
+                                MaterialTheme.colorScheme.border
+                            } else {
+                                Color.Transparent
+                            },
+                        ),
+                onClick = { onSectionChanged(MainSection.Search) },
+                selected = searchIsFocused,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "搜索",
                     )
                 },
             )

@@ -1,13 +1,8 @@
 package dev.frost819.newbv.app.ui.screen.anlibili
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,26 +21,17 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import dev.frost819.newbv.app.data.anlibili.AnlibiliChannel
-import dev.frost819.newbv.app.data.anlibili.AnlibiliVideo
 import dev.frost819.newbv.app.ui.component.FocusSaver
-import dev.frost819.newbv.app.ui.component.ListFooterTip
 import dev.frost819.newbv.app.ui.component.TopNav
 import dev.frost819.newbv.app.ui.component.TopNavItem
-import dev.frost819.newbv.app.ui.component.TvLazyVerticalGrid
-import dev.frost819.newbv.app.ui.component.focusSaverItem
-import dev.frost819.newbv.app.ui.component.videocard.SmallVideoCard
 import dev.frost819.newbv.app.ui.component.videocard.VideoCardData
 import dev.frost819.newbv.app.ui.navigation.navigateFromVideoCard
 import dev.frost819.newbv.app.util.ToastUtils
-import dev.frost819.newbv.app.util.formatHourMinSec
-import dev.frost819.newbv.app.util.toWanString
 import dev.frost819.newbv.app.viewmodel.anlibili.AnlibiliEffect
 import dev.frost819.newbv.app.viewmodel.anlibili.AnlibiliViewModel
-import dev.frost819.newbv.biliapi.http.util.toSmartDate
 import androidx.compose.material3.Scaffold as Material3Scaffold
 
 /**
@@ -89,7 +75,7 @@ fun AnlibiliContent(
     LaunchedEffect(Unit) { viewModel.loadIfNeeded() }
 
     // 首次进入（没有保存过焦点）时把焦点放到第一个视频卡片，避免 TV 上"无焦点"状态
-    val firstItemKey = state.items.firstOrNull()?.let { "anlibili_${it.bv}" }
+    val firstItemKey = state.items.firstOrNull()?.let { anlibiliFocusKey(ANLIBILI_FOCUS_PREFIX, it) }
     LaunchedEffect(firstItemKey) {
         val key = firstItemKey ?: return@LaunchedEffect
         if (focusSaver.savedKeyValue().isNotEmpty()) return@LaunchedEffect
@@ -147,76 +133,13 @@ fun AnlibiliContent(
                         false
                     },
         ) {
-            AnlibiliGrid(
+            AnlibiliVideoGrid(
                 items = state.items,
                 loading = state.loading,
                 error = state.error,
                 focusSaver = focusSaver,
+                keyPrefix = ANLIBILI_FOCUS_PREFIX,
                 onPlay = viewModel::play,
-            )
-        }
-    }
-}
-
-/**
- * anlibili 视频网格（4 列，整表一次展示，站点无分页）。
- *
- * @param items 当前频道的视频。
- * @param loading 是否正在加载。
- * @param error 是否加载失败。
- * @param focusSaver 焦点恢复器。
- * @param onPlay 点击卡片回调。
- */
-@Composable
-private fun AnlibiliGrid(
-    items: List<AnlibiliVideo>,
-    loading: Boolean,
-    error: Boolean,
-    focusSaver: FocusSaver,
-    onPlay: (AnlibiliVideo) -> Unit,
-) {
-    val gridState = rememberLazyGridState()
-
-    TvLazyVerticalGrid(
-        state = gridState,
-        columns = GridCells.Fixed(4),
-        contentPadding = PaddingValues(24.dp),
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        items(
-            items = items,
-            key = { it.bv },
-        ) { video ->
-            // aid 未知：站点只给 BV 号，点击时才解析，因此卡片上不提供「稍后再看」
-            val cardData =
-                remember(video) {
-                    VideoCardData(
-                        avid = 0L,
-                        bvid = video.bv,
-                        title = video.title,
-                        cover = video.pic,
-                        playString = video.view.toWanString(),
-                        danmakuString = video.danmaku.toWanString(),
-                        timeString = video.duration.formatHourMinSec(),
-                        upName = video.up,
-                        upMid = video.mid.takeIf { it > 0 },
-                        pubTime = video.pub.toSmartDate(),
-                    )
-                }
-            SmallVideoCard(
-                modifier = Modifier.focusSaverItem(focusSaver, "anlibili_${video.bv}"),
-                data = cardData,
-                onClick = { onPlay(video) },
-            )
-        }
-
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            ListFooterTip(
-                isLoading = loading,
-                isError = error,
-                hasMore = false,
-                itemsIsEmpty = items.isEmpty(),
             )
         }
     }

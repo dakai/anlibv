@@ -26,6 +26,7 @@ import dev.frost819.newbv.app.ui.navigation.LoginRoute
 import dev.frost819.newbv.app.ui.navigation.SettingsRoute
 import dev.frost819.newbv.app.ui.screen.anlibili.AnlibiliContent
 import dev.frost819.newbv.app.ui.screen.personal.PersonalContent
+import dev.frost819.newbv.app.ui.screen.search.SearchContent
 import dev.frost819.newbv.app.viewmodel.user.UserViewModel
 
 /** 主页面路由注册。 */
@@ -98,6 +99,11 @@ fun MainScreen(
                 MainSection.Anlibili ->
                     AnlibiliContent(
                         navFocusRequester = contentFocusRequester,
+                        navController = navController,
+                        focusSaver = focusSaver,
+                    )
+                MainSection.Search ->
+                    SearchContent(
                         navController = navController,
                         focusSaver = focusSaver,
                     )
